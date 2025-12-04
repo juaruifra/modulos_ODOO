@@ -1,0 +1,63 @@
+# ---------------------------------------------------------
+# IGNORAR ARCHIVOS PYTHON
+# ---------------------------------------------------------
+__pycache__/
+*/__pycache__/
+*/*/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# ---------------------------------------------------------
+# IGNORAR ARCHIVOS DE ODOO
+# ---------------------------------------------------------
+# Archivos temporales de base de datos
+*.db
+*.db-shm
+*.db-wal
+
+# Archivos de paquetes Python generados
+*.egg-info/
+.eggs/
+
+# Archivos de log generados por el servidor Odoo
+*.log
+
+# ---------------------------------------------------------
+# ENTORNOS VIRTUALES (virtualenv, pipenv, etc.)
+# ---------------------------------------------------------
+venv/
+env/
+.venv/
+.env/
+
+# ---------------------------------------------------------
+# IGNORAR CONFIGURACIÓN DE EDITORES
+# ---------------------------------------------------------
+# VS Code
+.vscode/
+.history/
+
+# PyCharm / JetBrains
+.idea/
+
+# ---------------------------------------------------------
+# ARCHIVOS DE SISTEMAS OPERATIVOS
+# ---------------------------------------------------------
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# ---------------------------------------------------------
+# OTROS ARCHIVOS QUE NO DEBEN SUBIRSE
+# ---------------------------------------------------------
+*.swp
+*.swo
+
+# ---------------------------------------------------------
+# ARCHIVOS DE TESTS O TEMPORALES (opcional)
+# ---------------------------------------------------------
+# test-output/
+# tmp/
