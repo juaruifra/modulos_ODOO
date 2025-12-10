@@ -19,4 +19,24 @@
               action="estate_property_action"
               sequence="10"/>
 
+    <!-- Menú de configuración -->
+    <menuitem id="estate_menu_settings"
+          name="Configuración"
+          parent="estate_menu_root"
+          sequence="20"/>
+
+    <!-- Opción de menú para tipos de propiedad -->
+    <menuitem id="estate_property_type_menu"
+          name="Tipos de propiedad"
+          parent="estate_menu_settings"
+          action="estate_property_type_action"
+          sequence="10"/>
+
+    <!-- Opción de menú para etiquetas de propiedad -->
+    <menuitem id="estate_property_tag_menu"
+          name="Etiquetas de propiedad"
+          parent="estate_menu_settings"
+          action="estate_property_tag_action"
+          sequence="20"/>
+
 </odoo>

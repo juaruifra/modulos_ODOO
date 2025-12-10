@@ -83,9 +83,12 @@
                         <field name="name"/>
                     </h1>
 
+                    <field name="tag_ids" widget="many2many_tags"/>
+
                     <!-- Bloque superior con dos columnas -->
                     <group>
                         <group>
+                            <field name="property_type_id"/>
                             <field name="post_code"/>
                             <field name="date_availabality"/>
                         </group>
@@ -121,6 +124,22 @@
                                 <field name="state"/>
                             </group>
                         </page>
+                        <page string="Otra información">
+                            <group>
+                                <field name="seller_id"/>
+                                <field name="buyer_id"/>
+                            </group>
+                        </page>
+                        <page string="Offers">
+                            <field name="offer_ids">
+                                <list editable="bottom">
+                                    <field name="price"/>
+                                    <field name="partner_id"/>
+                                    <field name="status"/>
+                                </list>
+                            </field>
+                        </page>
+
 
                     </notebook>
 
