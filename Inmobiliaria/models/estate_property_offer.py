@@ -25,6 +25,7 @@ class EstatePropertyOffer(models.Model):
         required=True
     )
 
+    # Campos que van a cambiar si cambia cualquiera de los dos. 
     validity = fields.Integer(
         string="Validez (días)",
         default=7
@@ -36,15 +37,17 @@ class EstatePropertyOffer(models.Model):
         inverse="_inverse_date_deadline"
     )
 
+    
+    # Si se cambia uno, se recalcula el otro. Funciones
     @api.depends('validity', 'create_date')
     def _compute_date_deadline(self):
-        """date_deadline = create_date + validity_days"""
+        """date_deadline = create_date + validity"""
         for record in self:
             create = record.create_date.date() if record.create_date else date.today()
             record.date_deadline = create + timedelta(days=record.validity)
 
     def _inverse_date_deadline(self):
-        """Si el usuario cambia date_deadline → recalcular validity"""
+        """Si el usuario cambia date_deadline: recalcular validity"""
         for record in self:
             create = record.create_date.date() if record.create_date else date.today()
             if record.date_deadline:

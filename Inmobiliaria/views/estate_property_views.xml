@@ -133,8 +133,8 @@
                             </group>
                         </page>
                         <page string="Offers">
-                            <field name="offer_ids" 
-                            context="{'form_view_ref': 'Inmobiliaria.estate_property_offer_form_view'}">
+                        
+                            <field name="offer_ids">
                                 <list>
                                     <field name="price"/>
                                     <field name="partner_id"/>
@@ -153,7 +153,7 @@
         </field>
     </record>
 
-    <!-- Vista formulario para estate.property.offer -->
+    <!-- Vista formulario para estate.property.offer
     <record id="estate_property_offer_form_view" model="ir.ui.view">
         <field name="name">estate.property.offer.form</field>
         <field name="model">estate.property.offer</field>
@@ -171,7 +171,7 @@
             </form>
         </field>
     </record>
-
+    -->
 
 
 </odoo>

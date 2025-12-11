@@ -7,6 +7,7 @@ class EstateProperty(models.Model):
     _name = "estate.property"
     _description = "Propiedades inmbomibiliaria"
 
+    # Campos de una propiedad
     active = fields.Boolean('Activo', default=True)
 
     state = fields.Selection([
@@ -39,40 +40,50 @@ class EstateProperty(models.Model):
         ('west', 'Oeste')
     ], string='Orientación del jardín')
 
+    # Relación con tipos: muchas propiedades pueden tener el mismo tipo.
+    # Una propiedad solo puede tener un tipo
     property_type_id = fields.Many2one(
         'estate.property.type',
         string='Tipo de propiedad'
     )
 
+    # Relación comprador: muchas propiedades pueden tener el mismo comprador.
+    # Una propiedad solo puede tener un comprador
     buyer_id = fields.Many2one(
         'res.partner',
         string='Comprador',
         copy=False
     )
 
+    # Relación usuarios: muchas propiedades pueden tener el mismo vendedor.
+    # Una propiedad solo puede tener un vendedor
     seller_id = fields.Many2one(
         'res.users',
         string='Vendedor',
         default=lambda self: self.env.user
     )
 
+    # Relación Etiquetas
     tag_ids = fields.Many2many(
         'estate.property.tag',
         string='Etiquetas'
     )
 
+    # Lo que añade la tabla de ofertas: Relación
     offer_ids = fields.One2many(
         'estate.property.offer',
         'property_id',
         string="Ofertas"
     )
-    
+
+    # Area total, calculada automáticamente
     total_area = fields.Integer(
         string="Total Area",
         compute="_compute_total_area",
         readonly=True
     )
 
+    # Cuando se cambia cualquiera de los dos campos, se ejecuta el recálculo
     @api.depends('living_area', 'garden_area')
     def _compute_total_area(self):
         for record in self:
