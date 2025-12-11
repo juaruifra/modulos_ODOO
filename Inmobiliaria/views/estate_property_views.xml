@@ -94,6 +94,7 @@
                         </group>
                         <group>
                             <field name="expected_price"/>
+                            <field name="best_price"/>
                             <field name="selling_price"/>
                         </group>
                     </group>
@@ -116,6 +117,7 @@
                                 <field name="garden"/>
                                 <field name="garden_area"/>
                                 <field name="garden_orientation"/>
+                                <field name="total_area"/>
                             </group>
                         </page>
                         <page string="Estados">
@@ -131,10 +133,13 @@
                             </group>
                         </page>
                         <page string="Offers">
-                            <field name="offer_ids">
-                                <list editable="bottom">
+                            <field name="offer_ids" 
+                            context="{'form_view_ref': 'Inmobiliaria.estate_property_offer_form_view'}">
+                                <list>
                                     <field name="price"/>
                                     <field name="partner_id"/>
+                                    <field name="validity"/>
+                                    <field name="date_deadline"/>
                                     <field name="status"/>
                                 </list>
                             </field>
@@ -147,5 +152,26 @@
             </form>
         </field>
     </record>
+
+    <!-- Vista formulario para estate.property.offer -->
+    <record id="estate_property_offer_form_view" model="ir.ui.view">
+        <field name="name">estate.property.offer.form</field>
+        <field name="model">estate.property.offer</field>
+        <field name="arch" type="xml">
+            <form string="Offer">
+                <sheet>
+                    <group>
+                        <field name="price"/>
+                        <field name="partner_id"/>
+                        <field name="validity"/>
+                        <field name="date_deadline"/>
+                        <field name="status"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
 
 </odoo>
