@@ -84,3 +84,12 @@ class EstatePropertyOffer(models.Model):
             if offer.status == 'accepted':
                 raise UserError("No puedes rechazar una oferta que ya ha sido aceptada.")
             offer.status = 'refused'
+
+    # Restricción: El precio de la oferta tiene que ser mayor que cero
+    _sql_constraints = [
+        (
+            'estate_property_offer_check_price_positive',
+            'CHECK(price > 0)',
+            'El precio de la oferta debe ser mayor que cero',
+        ),
+    ]
