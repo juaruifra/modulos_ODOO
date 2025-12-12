@@ -74,6 +74,17 @@
                 <header>
                     <field name="state" widget="statusbar"
                         statusbar_visible="new,offer_received,offer_accepted,sold,canceled"/>
+
+                    <button name="action_cancel"
+                            type="object"
+                            string="Cancelar"
+                            class="btn btn-secondary"/>
+
+                    <button name="action_sold"
+                            type="object"
+                            string="Vendido"
+                            class="btn btn-primary"/>
+
                 </header>
 
                 <sheet>
@@ -88,6 +99,7 @@
                     <!-- Bloque superior con dos columnas -->
                     <group>
                         <group>
+                            <field name="state" modifiers="{'readonly': true}"/>
                             <field name="property_type_id"/>
                             <field name="post_code"/>
                             <field name="date_availabality"/>
@@ -140,6 +152,14 @@
                                     <field name="partner_id"/>
                                     <field name="validity"/>
                                     <field name="date_deadline"/>
+                                    <button name="action_accept"
+                                            states="draft"
+                                            type="object"
+                                            icon="fa-check"/>
+                                    <button name="action_refuse"
+                                            states="draft"
+                                            type="object"
+                                            icon="fa-times"/>
                                     <field name="status"/>
                                 </list>
                             </field>

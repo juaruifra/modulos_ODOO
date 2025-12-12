@@ -1,5 +1,6 @@
 from odoo import models, fields, api
 from datetime import timedelta, date
+from odoo.exceptions import UserError
 
 class EstatePropertyOffer(models.Model):
     _name = "estate.property.offer"
@@ -53,3 +54,33 @@ class EstatePropertyOffer(models.Model):
             if record.date_deadline:
                 delta = record.date_deadline - create
                 record.validity = delta.days
+
+
+    # Funciones para los botones de aceptar y rechazar oferta
+    def action_accept(self):
+        for offer in self:
+
+            # No permitir aceptar dos ofertas
+            if offer.property_id.offer_ids.filtered(lambda o: o.status == 'accepted'):
+                raise UserError("Ya existe una oferta aceptada para esta propiedad.")
+
+            # Cambiar el estado a aceptado
+            offer.status = 'accepted'
+
+            #recuperamos la propiedad
+            property = offer.property_id
+
+            # Actualizar información en la propiedad
+            property.selling_price = offer.price
+            property.buyer_id = offer.partner_id
+            property.state = 'offer_accepted'
+
+            # Rechazar automáticamente las demás ofertas
+            other_offers = property.offer_ids - offer
+            other_offers.write({'status': 'refused'})
+
+    def action_refuse(self):
+        for offer in self:
+            if offer.status == 'accepted':
+                raise UserError("No puedes rechazar una oferta que ya ha sido aceptada.")
+            offer.status = 'refused'
