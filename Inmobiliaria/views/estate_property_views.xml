@@ -13,7 +13,7 @@
                 <field name="post_code"/>
                 <field name="expected_price"/>
                 <field name="bedrooms"/>
-                <field name="living_area"/>
+                <field name="living_area" filter_domain="[('living_area', '>=', self)]"/>
                 <field name="facades"/>
 
                 <!-- Filtros -->
@@ -40,6 +40,9 @@
         <field name="res_model">estate.property</field>
         <field name="view_mode">list,form</field>
         <field name="search_view_id" ref="estate_property_search_view"/>
+        <field name="context">
+            {'search_default_available_filter': 1}
+        </field>
     </record>
 
     <!-- Vista árbol (lista) -->
@@ -47,14 +50,20 @@
         <field name="name">estate.property.list</field>
         <field name="model">estate.property</field>
         <field name="arch" type="xml">
-            <list>
+            <list 
+            decoration-success="state == 'offer_received' or state == 'offer_accepted'"
+            decoration-bf="state == 'offer_accepted'"
+            decoration-muted="state == 'sold'"
+            >
+
                 <field name="name"/>
                 <field name="post_code"/>
                 <field name="bedrooms"/>
                 <field name="living_area"/>
                 <field name="expected_price"/>
                 <field name="selling_price"/>
-                <field name="date_availabality"/>
+                <field name="date_availabality" optional="hide"/>
+                <field name="state" optional="hide"/>
             </list>
         </field>
     </record>
@@ -78,12 +87,14 @@
                     <button name="action_cancel"
                             type="object"
                             string="Cancelar"
-                            class="btn btn-secondary"/>
+                            class="btn btn-secondary"
+                            invisible="state in ('sold','canceled')"/>
 
                     <button name="action_sold"
                             type="object"
                             string="Vendido"
-                            class="btn btn-primary"/>
+                            class="btn btn-primary"
+                            invisible="state in ('sold','canceled')"/>
 
                 </header>
 
@@ -94,13 +105,12 @@
                         <field name="name"/>
                     </h1>
 
-                    <field name="tag_ids" widget="many2many_tags"/>
+                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
 
                     <!-- Bloque superior con dos columnas -->
                     <group>
                         <group>
-                            <field name="state" modifiers="{'readonly': true}"/>
-                            <field name="property_type_id"/>
+                            <field name="property_type_id" options="{'no_create': True, 'no_open': True}"/>
                             <field name="post_code"/>
                             <field name="date_availabality"/>
                         </group>
@@ -127,8 +137,8 @@
                                 <field name="facades"/>
                                 <field name="garage"/>
                                 <field name="garden"/>
-                                <field name="garden_area"/>
-                                <field name="garden_orientation"/>
+                                <field name="garden_area" invisible="not garden"/>
+                                <field name="garden_orientation" invisible="not garden"/>
                                 <field name="total_area"/>
                             </group>
                         </page>
@@ -146,8 +156,12 @@
                         </page>
                         <page string="Offers">
                         
-                            <field name="offer_ids">
-                                <list>
+                            <field name="offer_ids" 
+                            readonly="state in ('offer_accepted','sold','canceled')">
+                                <list editable="bottom"
+                                decoration-danger="status == 'refused'"
+                                decoration-success="status == 'accepted'"
+                                >
                                     <field name="price"/>
                                     <field name="partner_id"/>
                                     <field name="validity"/>
@@ -155,12 +169,14 @@
                                     <button name="action_accept"
                                             states="draft"
                                             type="object"
-                                            icon="fa-check"/>
+                                            icon="fa-check"
+                                            invisible="status"/>
                                     <button name="action_refuse"
                                             states="draft"
                                             type="object"
-                                            icon="fa-times"/>
-                                    <field name="status"/>
+                                            icon="fa-times"
+                                            invisible="status"/>
+                                    <field name="status" column_invisible="1"/>
                                 </list>
                             </field>
                         </page>

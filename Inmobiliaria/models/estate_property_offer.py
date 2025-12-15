@@ -93,3 +93,22 @@ class EstatePropertyOffer(models.Model):
             'El precio de la oferta debe ser mayor que cero',
         ),
     ]
+
+    # Cambiar el estado a oferta recibida
+    @api.model
+    def create(self, vals):
+        offer = super().create(vals)
+
+        if offer.property_id.state == "new":
+            offer.property_id.state = "offer_received"
+
+        return offer
+    
+
+    # Campo relacionado para saber a qué tipo de propiedad pertenece la oferta
+    # Se almacena en BD para poder usarlo en posteriorimente
+    property_type_id = fields.Many2one(
+        related="property_id.property_type_id",
+        store=True,
+        readonly=True,
+    )

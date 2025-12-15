@@ -9,6 +9,9 @@ class EstateProperty(models.Model):
     _name = "estate.property"
     _description = "Propiedades inmbomibiliaria"
 
+    #ordenación id descendente. Los ultimos en ser añadidos se mostrarán los primeros
+    _order = "id desc" 
+
     # Campos de una propiedad
     active = fields.Boolean('Activo', default=True)
 
