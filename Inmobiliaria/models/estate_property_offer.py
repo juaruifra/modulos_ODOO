@@ -95,14 +95,14 @@ class EstatePropertyOffer(models.Model):
     ]
 
     # Cambiar el estado a oferta recibida
-    @api.model
-    def create(self, vals):
-        offer = super().create(vals)
+    # @api.model
+    # def create(self, vals):
+    #     offer = super().create(vals)
 
-        if offer.property_id.state == "new":
-            offer.property_id.state = "offer_received"
+    #     if offer.property_id.state == "new":
+    #         offer.property_id.state = "offer_received"
 
-        return offer
+    #     return offer
     
 
     # Campo relacionado para saber a qué tipo de propiedad pertenece la oferta
@@ -112,3 +112,23 @@ class EstatePropertyOffer(models.Model):
         store=True,
         readonly=True,
     )
+
+    @api.model
+    def create(self, vals):
+        # Obtener la propiedad (vals trae solo el ID)
+        property_rec = self.env["estate.property"].browse(vals.get("property_id"))
+
+        # Comprobar precio contra ofertas existentes
+        if property_rec.offer_ids:
+            max_price = max(property_rec.offer_ids.mapped("price"))
+            if vals.get("price") <= max_price:
+                raise UserError(
+                    "La oferta debe ser superior a las ofertas existentes."
+                )
+
+        # Cambiar estado de la propiedad
+        if property_rec.state == "new":
+            property_rec.state = "offer_received"
+
+        # Crear la oferta normalmente
+        return super().create(vals)

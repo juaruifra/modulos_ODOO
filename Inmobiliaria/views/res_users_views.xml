@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Heredar formulario de usuarios -->
+    <record id="res_users_form_inherit_estate_properties" model="ir.ui.view">
+        <field name="name">res.users.form.inherit.estate.properties</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+
+        <field name="arch" type="xml">
+            <!-- Añadimos una nueva pestaña -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Propiedades">
+
+                    <!-- Lista de propiedades (solo lectura) -->
+                    <field name="property_ids" readonly="1">
+                        <list>
+
+                            <!-- MISMAS columnas que estate_property_list_view -->
+                            <field name="name" width="150"/>
+                            <field name="property_type_id"/>
+                            <field name="post_code" width="150"/>
+
+                            <!-- Tags con colores -->
+                            <field name="tag_ids"
+                                   widget="many2many_tags"
+                                   options="{'color_field': 'color'}"/>
+
+                            <field name="bedrooms" width="150"/>
+                            <field name="living_area" width="150"/>
+                            <field name="expected_price" width="150"/>
+                            <field name="selling_price" width="150"/>
+
+                        </list>
+                    </field>
+
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

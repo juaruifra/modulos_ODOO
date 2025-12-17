@@ -167,3 +167,13 @@ class EstateProperty(models.Model):
                 raise ValidationError(
                     "El precio de venta no puede ser inferior al 90% del precio esperado."
                 )
+            
+    
+    # Impedir borrado según estado
+    def unlink(self):
+        for record in self:
+            if record.state not in ('new', 'canceled'):
+                raise UserError(
+                    "Solo se pueden eliminar propiedades en estado Nuevo o Cancelado."
+                )
+        return super().unlink()

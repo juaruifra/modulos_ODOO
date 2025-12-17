@@ -56,14 +56,16 @@
             decoration-muted="state == 'sold'"
             >
 
-                <field name="name"/>
-                <field name="post_code"/>
-                <field name="bedrooms"/>
-                <field name="living_area"/>
-                <field name="expected_price"/>
-                <field name="selling_price"/>
-                <field name="date_availabality" optional="hide"/>
-                <field name="state" optional="hide"/>
+                <field name="name" width="150"/>
+                <field name="property_type_id"/>
+                <field name="post_code" width="150"/>
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>     
+                <field name="bedrooms" width="150"/>
+                <field name="living_area" width="150"/>
+                <field name="expected_price" width="150"/>
+                <field name="selling_price" width="150"/>
+                <field name="date_availabality" optional="hide" width="150"/>
+                <field name="state" optional="hide" width="150"/>
             </list>
         </field>
     </record>
