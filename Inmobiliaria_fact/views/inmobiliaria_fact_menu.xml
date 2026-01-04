@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Menú técnico simple para verificar instalación -->
+    <menuitem id="inmobiliaria_fact_menu_root"
+              name="Inmobiliaria Fact"
+              sequence="999"/>
+</odoo>
