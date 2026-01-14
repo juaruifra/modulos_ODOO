@@ -143,4 +143,28 @@ class PeluqueriaCita(models.Model):
                 raise ValidationError(
                     'No se puede asignar una cita en una fecha u hora anterior a la actual.'
                 )
+            
+
+
+    # Pasa la cita de borrador a confirmada
+    def action_confirmar(self):
+        for cita in self:
+            cita.state = 'confirmada'
+
+    # Pasa la cita a estado realizada
+    def action_realizar(self):
+        for cita in self:
+            cita.state = 'realizada'
+
+    # Cancela la cita
+    def action_cancelar(self):
+        for cita in self:
+            cita.state = 'cancelada'
+
+    # Devuelve la cita a borrador
+    # Esto puede ser útil si se ha cometido un error
+    def action_volver_borrador(self):
+        for cita in self:
+            cita.state = 'borrador'
+
 

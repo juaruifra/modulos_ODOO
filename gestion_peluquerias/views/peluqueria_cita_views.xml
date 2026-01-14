@@ -29,6 +29,73 @@
         <field name="model">peluqueria.cita</field>
         <field name="arch" type="xml">
             <form>
+
+                <!--
+                BOTONES DE ESTADO
+                Se muestran u ocultan según el estado actual de la cita
+                -->
+                <header>
+
+                    <!--
+                        Botón Confirmar
+                        Solo visible cuando la cita está en borrador
+                    -->
+                    <button
+                        name="action_confirmar"
+                        type="object"
+                        string="Confirmar"
+                        class="btn-primary"
+                        invisible="state != 'borrador'"
+                    />
+
+                    <!--
+                        Botón Finalizar
+                        Solo visible cuando la cita está confirmada
+                    -->
+                    <button
+                        name="action_realizar"
+                        type="object"
+                        string="Finalizar"
+                        class="btn-success"
+                        invisible="state != 'confirmada'"
+                    />
+
+                    <!--
+                        Botón Cancelar
+                        Visible en borrador o confirmada
+                    -->
+                    <button
+                        name="action_cancelar"
+                        type="object"
+                        string="Cancelar"
+                        class="btn-danger"
+                        invisible="state not in ('borrador', 'confirmada')"
+                    />
+
+                    <!--
+                        Botón Volver a borrador
+                        Solo visible si la cita está cancelada
+                    -->
+                    <button
+                        name="action_volver_borrador"
+                        type="object"
+                        string="Volver a borrador"
+                        invisible="state in ('borrador')"
+                    />
+
+                    <!--
+                        Barra visual del estado de la cita
+                    -->
+                    <field
+                        name="state"
+                        widget="statusbar"
+                        statusbar_visible="borrador,confirmada,realizada,cancelada"
+                    />
+
+                </header>
+
+
+
                 <sheet>
 
                     <!-- Código automático de la cita: De momento lo comento
@@ -53,7 +120,7 @@
                         <page string="Servicios">
                             <field name="linea_servicio_ids">
                                 <list editable="bottom">
-                                    <field name="servicio_id"/>
+                                    <field name="servicio_id" width="300"/>
                                     <field name="duracion"/>
                                     <field name="precio"/>
                                     <field name="subtotal" readonly="1"/>
