@@ -31,6 +31,14 @@
             <form>
                 <sheet>
 
+                    <!-- Código automático de la cita: De momento lo comento
+                    porque con que aparezca una vez sobra. Ya lo he puesto en el
+                    name para que sustituya lo que se mostraba antes que era el
+                    identificador interno de la BBDD y eso no tiene ningún sentido -->
+                    <!-- <group>
+                        <field name="name" readonly="1"/>
+                    </group> -->
+
                     <!-- Datos principales de la cita -->
                     <group>
                         <field name="cliente_id"/>

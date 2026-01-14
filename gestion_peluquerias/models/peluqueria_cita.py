@@ -7,6 +7,15 @@ class PeluqueriaCita(models.Model):
     _description = 'Cita de Peluquería'
     _order = 'fecha_inicio'
 
+    # Código automático de la cita
+    # Será algo como: CITA/2026/00001
+    name = fields.Char(
+        string='Código de Cita',
+        readonly=True,
+        copy=False,
+        default='Nueva'
+    )
+
     # Cliente de la cita (se usa el modelo estándar de Odoo: res.partner)
     cliente_id = fields.Many2one(
         'res.partner',
@@ -61,6 +70,18 @@ class PeluqueriaCita(models.Model):
         string='Estado'
     )
 
+    # Asigna automáticamente el código de cita al crearla
+    @api.model
+    def create(self, vals):
+        # Si la cita todavía no tiene código, se lo asignamos
+        if vals.get('name', 'Nueva') == 'Nueva':
+            vals['name'] = self.env['ir.sequence'].next_by_code(
+                'peluqueria.cita'
+            ) or 'Nueva'
+
+        # Llamamos al create original de Odoo
+        return super().create(vals)
+
     # Calcula la fecha de fin sumando las duraciones de las líneas
     @api.depends('fecha_inicio', 'linea_servicio_ids.duracion')
     def _compute_fecha_fin(self):
@@ -104,3 +125,22 @@ class PeluqueriaCita(models.Model):
                 raise ValidationError(
                     'El estilista ya tiene una cita asignada en ese horario.'
                 )
+
+    # Regla: no se puede asignar una cita en una fecha u hora pasada
+    @api.constrains('fecha_inicio')
+    def _check_fecha_inicio_no_pasada(self):
+        # Recorremos las citas que se están guardando
+        for cita in self:
+            # Si no hay fecha de inicio, no comprobamos nada
+            if not cita.fecha_inicio:
+                continue
+
+            # Obtenemos la fecha y hora actual
+            ahora = fields.Datetime.now()
+
+            # Si la fecha de la cita es anterior a ahora, lanzamos error
+            if cita.fecha_inicio < ahora:
+                raise ValidationError(
+                    'No se puede asignar una cita en una fecha u hora anterior a la actual.'
+                )
+

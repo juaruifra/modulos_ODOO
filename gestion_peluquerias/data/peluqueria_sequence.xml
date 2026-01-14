@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!--
+        SECUENCIA PARA LAS CITAS
+        Genera códigos como: CITA/2026/00001
+    -->
+    <record id="seq_peluqueria_cita" model="ir.sequence">
+        <!-- Nombre visible de la secuencia -->
+        <field name="name">Citas Peluquería</field>
+
+        <!-- Código técnico que se usa en Python -->
+        <field name="code">peluqueria.cita</field>
+
+        <!-- Prefijo del código -->
+        <field name="prefix">CITA/%(year)s/</field>
+
+        <!-- Número de dígitos del contador -->
+        <field name="padding">5</field>
+
+        <!-- Empieza a contar desde 1 -->
+        <field name="number_next">1</field>
+
+        <!-- Hace que el contador se reinicie cada año -->
+        <field name="use_date_range">True</field>
+    </record>
+
+</odoo>

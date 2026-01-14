@@ -31,6 +31,9 @@ calculando automáticamente tiempos y precios.
         # Antes que nada la seguridad
         'security/ir.model.access.csv',
 
+        # Secuencias
+        'data/peluqueria_sequence.xml',
+
         # Ahora las vistas
         'views/peluqueria_servicio_views.xml',
         'views/peluqueria_estilista_views.xml',
