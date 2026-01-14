@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- 
+    <menuitem
+        id="peluqueria_menu_root"
+        name="Peluquería"
+        sequence="10"
+    />
+
+    
+    <menuitem
+        id="peluqueria_menu_servicios"
+        name="Servicios"
+        parent="peluqueria_menu_root"
+        action="action_peluqueria_servicio"
+        sequence="10"
+    />
+    -->
+
+    <!--
+        MENÚ RAÍZ DEL MÓDULO
+        Es el menú inicial de la aplicación que aparece en el menu principal de Odoo
+    -->
+    <menuitem
+        id="peluqueria_menu_root"
+        name="Peluquería"
+        sequence="10"
+    />
+
+    <!--
+        MENÚ: GESTIONES
+        Aquí irá el trabajo diario de la peluquería
+    -->
+    <menuitem
+        id="peluqueria_menu_gestiones"
+        name="Gestiones"
+        parent="peluqueria_menu_root"
+        sequence="10"
+    />
+
+    <!--
+        MENÚ: CITAS
+        Desde aquí se gestionarán las citas
+    -->
+    <menuitem
+        id="peluqueria_menu_citas"
+        name="Citas"
+        parent="peluqueria_menu_gestiones"
+        action="action_peluqueria_cita"
+        sequence="10"
+    />
+
+    <!--
+        MENÚ: CONFIGURACIÓN
+        Aquí se gestionan los datos básicos del sistema
+    -->
+    <menuitem
+        id="peluqueria_menu_configuracion"
+        name="Configuración"
+        parent="peluqueria_menu_root"
+        sequence="20"
+    />
+
+    <!--
+        MENÚ: SERVICIOS
+        Permite crear y modificar los servicios de la peluquería
+    -->
+    <menuitem
+        id="peluqueria_menu_servicios"
+        name="Servicios"
+        parent="peluqueria_menu_configuracion"
+        action="action_peluqueria_servicio"
+        sequence="10"
+    />
+
+    <!--
+        MENÚ: ESTILISTAS
+        Permite crear y modificar los estilistas
+    -->
+    <menuitem
+        id="peluqueria_menu_estilistas"
+        name="Estilistas"
+        parent="peluqueria_menu_configuracion"
+        action="action_peluqueria_estilista"
+        sequence="20"
+    />
+
+</odoo>

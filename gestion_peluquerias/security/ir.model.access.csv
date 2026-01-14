@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_peluqueria_servicio,peluqueria.servicio,model_peluqueria_servicio,base.group_user,1,1,1,1
+access_peluqueria_estilista,peluqueria.estilista,model_peluqueria_estilista,base.group_user,1,1,1,1
+access_peluqueria_cita,peluqueria.cita,model_peluqueria_cita,base.group_user,1,1,1,1
+access_peluqueria_cita_linea,peluqueria.cita.linea,model_peluqueria_cita_linea,base.group_user,1,1,1,1
+

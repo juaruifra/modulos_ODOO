@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!--
+        VISTA DE LISTA DE ESTILISTAS
+        Muestra todos los estilistas
+    -->
+    <record id="view_peluqueria_estilista_list" model="ir.ui.view">
+        <field name="name">peluqueria.estilista.list</field>
+        <field name="model">peluqueria.estilista</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" width="300"/>
+                <field name="activo"/>
+            </list>
+        </field>
+    </record>
+
+    <!--
+        VISTA DE FORMULARIO DE ESTILISTAS
+        Permite crear y editar estilistas
+    -->
+    <record id="view_peluqueria_estilista_form" model="ir.ui.view">
+        <field name="name">peluqueria.estilista.form</field>
+        <field name="model">peluqueria.estilista</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="activo"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!--
+        ACCIÓN DE ESTILISTAS
+        Es la que usa el menú Configuración - Estilistas
+    -->
+    <record id="action_peluqueria_estilista" model="ir.actions.act_window">
+        <field name="name">Estilistas</field>
+        <field name="res_model">peluqueria.estilista</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

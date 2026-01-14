@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!--
+        VISTA DE LISTA DE CITAS
+        Muestra todas las citas creadas
+    -->
+    <record id="view_peluqueria_cita_list" model="ir.ui.view">
+        <field name="name">peluqueria.cita.list</field>
+        <field name="model">peluqueria.cita</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="fecha_inicio"/>
+                <field name="fecha_fin"/>
+                <field name="cliente_id"/>
+                <field name="estilista_id"/>
+                <field name="state"/>
+                <field name="total"/>
+            </list>
+        </field>
+    </record>
+
+    <!--
+        VISTA DE FORMULARIO DE CITAS
+        Permite crear y editar una cita
+    -->
+    <record id="view_peluqueria_cita_form" model="ir.ui.view">
+        <field name="name">peluqueria.cita.form</field>
+        <field name="model">peluqueria.cita</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+
+                    <!-- Datos principales de la cita -->
+                    <group>
+                        <field name="cliente_id"/>
+                        <field name="estilista_id"/>
+                        <field name="fecha_inicio"/>
+                        <field name="fecha_fin" readonly="1"/>
+                        <field name="state"/>
+                    </group>
+
+                    <!-- Líneas de servicios -->
+                    <notebook>
+                        <page string="Servicios">
+                            <field name="linea_servicio_ids">
+                                <list editable="bottom">
+                                    <field name="servicio_id"/>
+                                    <field name="duracion"/>
+                                    <field name="precio"/>
+                                    <field name="subtotal" readonly="1"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+
+                    <!-- Total de la cita -->
+                    <group>
+                        <field name="total" readonly="1"/>
+                    </group>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!--
+        ACCIÓN DE CITAS
+        Es la que usa el menú Gestiones → Citas
+    -->
+    <record id="action_peluqueria_cita" model="ir.actions.act_window">
+        <field name="name">Citas</field>
+        <field name="res_model">peluqueria.cita</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>
