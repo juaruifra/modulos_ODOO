@@ -168,4 +168,18 @@ class PeluqueriaCita(models.Model):
         for cita in self:
             cita.state = 'borrador'
 
+    # Regla: no se puede asignar una cita a un estilista inactivo
+    @api.constrains('estilista_id')
+    def _check_estilista_activo(self):
+        for cita in self:
+            # Si no hay estilista asignado, no comprobamos nada
+            if not cita.estilista_id:
+                continue
+
+            # Si el estilista está inactivo, no permitimos guardar la cita
+            if not cita.estilista_id.activo:
+                raise ValidationError(
+                    'No se puede asignar una cita a un estilista que no está activo.'
+                )
+
 

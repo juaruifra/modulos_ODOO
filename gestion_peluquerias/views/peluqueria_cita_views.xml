@@ -109,7 +109,8 @@
                     <!-- Datos principales de la cita -->
                     <group>
                         <field name="cliente_id"/>
-                        <field name="estilista_id"/>
+                        <field name="estilista_id"
+                        domain="[('activo', '=', True)]"/>
                         <field name="fecha_inicio"/>
                         <field name="fecha_fin" readonly="1"/>
                         <field name="state"/>
