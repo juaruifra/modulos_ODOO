@@ -140,13 +140,161 @@
     </record>
 
     <!--
+    VISTA CALENDARIO DE CITAS
+    Muestra las citas como bloques de tiempo en una agenda
+    -->
+    <record id="view_peluqueria_cita_calendar" model="ir.ui.view">
+        <field name="name">peluqueria.cita.calendar</field>
+        <field name="model">peluqueria.cita</field>
+        <field name="arch" type="xml">
+            <calendar
+                string="Agenda de Citas"
+                date_start="fecha_inicio"
+                date_stop="fecha_fin"
+                color="estilista_id"
+                quick_create="false">
+
+                <!-- Título que aparece dentro del bloque -->
+                <field name="name"/>
+
+                <!-- Información adicional visible al pasar el ratón -->
+                <field name="cliente_id"/>
+                <field name="estilista_id"/>
+                <field name="state"/>
+
+            </calendar>
+        </field>
+    </record>
+
+        <!--
+        VISTA KANBAN DE CITAS
+        Muestra las citas como tarjetas agrupadas por estado
+    -->
+    <record id="view_peluqueria_cita_kanban" model="ir.ui.view">
+        <field name="name">peluqueria.cita.kanban</field>
+        <field name="model">peluqueria.cita</field>
+        <field name="arch" type="xml">
+            <!--
+                default_group_by="state" hace que las columnas se creen por estado
+            -->
+            <kanban default_group_by="state">
+                <field name="name"/>
+                <field name="cliente_id"/>
+                <field name="estilista_id"/>
+                <field name="fecha_inicio"/>
+                <field name="fecha_fin"/>
+                <field name="state"/>
+                <field name="total"/>
+
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click oe_kanban_card">
+
+                            <!-- Cabecera de la tarjeta -->
+                            <div class="oe_kanban_details">
+                                <!-- Código de la cita -->
+                                <strong>
+                                    <field name="name"/>
+                                </strong>
+                            </div>
+
+                            <!-- Información principal -->
+                            <div class="oe_kanban_details">
+                                <!-- Cliente y estilista -->
+                                <div>
+                                    <span>Cliente: </span>
+                                    <field name="cliente_id"/>
+                                </div>
+                                <div>
+                                    <span>Estilista: </span>
+                                    <field name="estilista_id"/>
+                                </div>
+                            </div>
+
+                            <!-- Fechas -->
+                            <div class="oe_kanban_details">
+                                <div>
+                                    <span>Inicio: </span>
+                                    <field name="fecha_inicio"/>
+                                </div>
+                                <div>
+                                    <span>Fin: </span>
+                                    <field name="fecha_fin"/>
+                                </div>
+                            </div>
+
+                            <!-- Estado y total -->
+                            <div class="oe_kanban_details">
+                                <div>
+                                    <span>Estado: </span>
+                                    <field name="state"/>
+                                </div>
+                                <div>
+                                    <span>Total: </span>
+                                    <field name="total"/>
+                                </div>
+                            </div>
+
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!--
+    VISTA DE BÚSQUEDA DE CITAS
+    Define filtros que el usuario puede activar o desactivar
+    -->
+    <record id="view_peluqueria_cita_search" model="ir.ui.view">
+        <field name="name">peluqueria.cita.search</field>
+        <field name="model">peluqueria.cita</field>
+        <field name="arch" type="xml">
+            <search>
+
+                <!-- Filtro: citas desde hoy en adelante -->
+                <filter
+                    name="futuras"
+                    string="Citas futuras"
+                    domain="[('fecha_inicio', '>=', context_today())]"
+                />
+
+                <!-- Filtro por estado -->
+                <filter name="borrador" string="Borrador" domain="[('state','=','borrador')]"/>
+                <filter name="confirmada" string="Confirmada" domain="[('state','=','confirmada')]"/>
+                <!-- <filter name="realizada" string="Realizada" domain="[('state','=','realizada')]"/>
+                <filter name="cancelada" string="Cancelada" domain="[('state','=','cancelada')]"/> -->
+
+                <!-- Campos de búsqueda -->
+                <field name="name"/>
+                <field name="cliente_id"/>
+                <field name="estilista_id"/>
+
+            </search>
+        </field>
+    </record>
+
+
+
+    <!--
         ACCIÓN DE CITAS
-        Es la que usa el menú Gestiones → Citas
+        Es la que usa el menú Gestiones - Citas
     -->
     <record id="action_peluqueria_cita" model="ir.actions.act_window">
         <field name="name">Citas</field>
         <field name="res_model">peluqueria.cita</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">calendar,kanban,list,form</field>
+
+        <!--
+            Hacemos que, al abrir la acción, las citas se agrupen por estado
+            también en otras vistas (especialmente kanban)
+        -->
+        <!-- Además utilizamos la vista search_default_futuras para poner filtros por defecto -->
+        <field name="context">{
+            'group_by': 'state',
+            'view_peluqueria_cita_search': 1,
+            'search_default_futuras': 1
+            }</field>
     </record>
 
 </odoo>

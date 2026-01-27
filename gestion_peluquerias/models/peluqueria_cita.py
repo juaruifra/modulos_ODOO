@@ -13,7 +13,8 @@ class PeluqueriaCita(models.Model):
         string='Código de Cita',
         readonly=True,
         copy=False,
-        default='Nueva'
+        default='Nueva',
+        required=False
     )
 
     # Cliente de la cita (se usa el modelo estándar de Odoo: res.partner)
