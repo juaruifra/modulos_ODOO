@@ -121,7 +121,7 @@
                         <page string="Servicios">
                             <field name="linea_servicio_ids">
                                 <list editable="bottom">
-                                    <field name="servicio_id" width="300"/>
+                                    <field name="servicio_id" width="300" domain="[('activo', '=', True)]"/>
                                     <field name="duracion"/>
                                     <field name="precio"/>
                                     <field name="subtotal" readonly="1"/>

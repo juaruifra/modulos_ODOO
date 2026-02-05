@@ -38,6 +38,7 @@ calculando automáticamente tiempos y precios.
         'views/peluqueria_servicio_views.xml',
         'views/peluqueria_estilista_views.xml',
         'views/peluqueria_cita_views.xml',
+        'views/peluqueria_res_partner_views.xml',
 
         # Después el menú
         'views/peluqueria_menu.xml', 

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Hereda la vista de formulario de res.partner para añadir distintivo VIP -->
+    <record id="view_res_partner_form_vip" model="ir.ui.view">
+        <field name="name">res.partner.form.vip</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <!-- Añade la etiqueta VIP junto al nombre del cliente -->
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="is_vip" invisible="1"/>
+                <span class="badge text-bg-primary ms-2" invisible="not is_vip">
+                    ⭐ VIP
+                </span>
+            </xpath>
+            <!-- Muestra el número de citas realizadas: Dentro del grupo de ventas -->
+            <xpath expr="//group[@name='sale']" position="inside">
+                <field name="citas_realizadas"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
