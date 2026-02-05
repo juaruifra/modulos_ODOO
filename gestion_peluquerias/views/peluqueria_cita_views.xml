@@ -260,11 +260,19 @@
                     domain="[('fecha_inicio', '>=', context_today())]"
                 />
 
+                <!-- Filtro: citas de hoy -->
+                <filter
+                    name="hoy"
+                    string="Hoy"
+                    domain="[
+                        ('fecha_inicio', '&gt;=', context_today()),
+                        ('fecha_inicio', '&lt;', (context_today() + relativedelta(days=1)))
+                    ]"
+                />
+
                 <!-- Filtro por estado -->
                 <filter name="borrador" string="Borrador" domain="[('state','=','borrador')]"/>
                 <filter name="confirmada" string="Confirmada" domain="[('state','=','confirmada')]"/>
-                <!-- <filter name="realizada" string="Realizada" domain="[('state','=','realizada')]"/>
-                <filter name="cancelada" string="Cancelada" domain="[('state','=','cancelada')]"/> -->
 
                 <!-- Campos de búsqueda -->
                 <field name="name"/>
