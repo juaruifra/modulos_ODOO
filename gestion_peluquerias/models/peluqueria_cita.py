@@ -1,6 +1,7 @@
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 from datetime import timedelta
+import pytz
 
 class PeluqueriaCita(models.Model):
     _name = 'peluqueria.cita'
@@ -182,4 +183,64 @@ class PeluqueriaCita(models.Model):
                     'No se puede asignar una cita a un estilista que no está activo.'
                 )
 
+    # Validación para asegurar que la cita se asigna dentro del horario comercial      
+    @api.constrains('fecha_inicio', 'linea_servicio_ids')
+    def _check_horario_comercial(self):
+        
+        for cita in self:
+            if not cita.fecha_inicio:
+                continue
+
+            # Calcular fecha_fin manualmente (no usar el campo computado)
+            total_horas = sum(cita.linea_servicio_ids.mapped('duracion'))
+            fecha_fin_calculada = cita.fecha_inicio + timedelta(hours=total_horas)
+
+            # Obtener zona horaria del usuario
+            tz = pytz.timezone(self.env.user.tz or 'UTC')
+            
+            # Localizar a UTC primero
+            fecha_inicio_utc = pytz.utc.localize(cita.fecha_inicio)
+            fecha_fin_utc = pytz.utc.localize(fecha_fin_calculada)
+            
+            # Convertir a hora local
+            fecha_inicio_local = fecha_inicio_utc.astimezone(tz)
+            fecha_fin_local = fecha_fin_utc.astimezone(tz)
+
+            # Obtener el día de la semana
+            dia_semana = str(fecha_inicio_local.weekday())
+
+            # Buscar TODOS los horarios de ese día
+            horarios = self.env['peluqueria.horario'].search([
+                ('dia_semana', '=', dia_semana),
+                ('cerrado', '=', False)
+            ])
+
+            if not horarios:
+                raise ValidationError('La peluquería está cerrada ese día.')
+
+            # Convertir hora de la cita a float
+            hora_inicio = fecha_inicio_local.hour + fecha_inicio_local.minute / 60
+            hora_fin = fecha_fin_local.hour + fecha_fin_local.minute / 60
+
+            # Comprobar si encaja en ALGUNA franja
+            cita_valida = False
+            for horario in horarios:
+                if hora_inicio >= horario.hora_apertura and hora_fin <= horario.hora_cierre:
+                    cita_valida = True
+                    break
+
+            if not cita_valida:
+                raise ValidationError('La cita está fuera del horario comercial.')
+
+    # Regla: solo se pueden modificar las citas en estado borrador
+    # sobrescribimos el método write para implementar esta regla        
+    def write(self, vals):
+        for cita in self:
+            # Si no está en borrador, solo permitir cambiar el estado
+            if cita.state != 'borrador':
+                campos_permitidos = {'state'}
+                campos_modificados = set(vals.keys())
+                if not campos_modificados.issubset(campos_permitidos):
+                    raise ValidationError('Solo se puede modificar una cita en estado Borrador.')
+        return super().write(vals)
 

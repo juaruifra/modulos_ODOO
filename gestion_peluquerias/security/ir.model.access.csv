@@ -3,4 +3,5 @@ access_peluqueria_servicio,peluqueria.servicio,model_peluqueria_servicio,base.gr
 access_peluqueria_estilista,peluqueria.estilista,model_peluqueria_estilista,base.group_user,1,1,1,1
 access_peluqueria_cita,peluqueria.cita,model_peluqueria_cita,base.group_user,1,1,1,1
 access_peluqueria_cita_linea,peluqueria.cita.linea,model_peluqueria_cita_linea,base.group_user,1,1,1,1
+access_peluqueria_horario,peluqueria.horario,model_peluqueria_horario,base.group_user,1,1,1,1
 

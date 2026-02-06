@@ -108,18 +108,18 @@
 
                     <!-- Datos principales de la cita -->
                     <group>
-                        <field name="cliente_id"/>
+                        <field name="cliente_id" readonly="state != 'borrador'"/>
                         <field name="estilista_id"
-                        domain="[('activo', '=', True)]"/>
-                        <field name="fecha_inicio"/>
+                        domain="[('activo', '=', True)]" readonly="state != 'borrador'"/>
+                        <field name="fecha_inicio" readonly="state != 'borrador'"/>
                         <field name="fecha_fin" readonly="1"/>
-                        <field name="state"/>
+                        <!-- <field name="state"/> --> 
                     </group>
 
                     <!-- Líneas de servicios -->
                     <notebook>
                         <page string="Servicios">
-                            <field name="linea_servicio_ids">
+                            <field name="linea_servicio_ids" readonly="state != 'borrador'">
                                 <list editable="bottom">
                                     <field name="servicio_id" width="300" domain="[('activo', '=', True)]"/>
                                     <field name="duracion"/>

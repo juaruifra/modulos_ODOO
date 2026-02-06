@@ -86,4 +86,16 @@
         sequence="20"
     />
 
+    <!--
+        MENÚ: HORARIO COMERCIAL
+        Permite configurar el horario de apertura y cierre de la peluquería
+    -->
+    <menuitem
+        id="menu_peluqueria_horario"
+        name="Horario Comercial"
+        parent="peluqueria_menu_configuracion"
+        action="action_peluqueria_horario"
+        sequence="30"
+    />
+
 </odoo>
