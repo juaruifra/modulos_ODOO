@@ -16,6 +16,7 @@
                 <field name="estilista_id"/>
                 <field name="state"/>
                 <field name="total"/>
+                <field name="total_final"/>
             </list>
         </field>
     </record>
@@ -135,6 +136,9 @@
                     <!-- Total de la cita -->
                     <group>
                         <field name="total" readonly="1"/>
+                        <field name="descuento_tipo" readonly="state != 'borrador'"/>
+                        <field name="descuento_valor" readonly="state != 'borrador'"/>
+                        <field name="total_final" readonly="1"/>
                     </group>
 
                     <!--
@@ -198,6 +202,7 @@
                 <field name="fecha_fin"/>
                 <field name="state"/>
                 <field name="total"/>
+                <field name="total_final"/>
                 <field name="notas"/>
                 <field name="cliente_vip"/>
 
@@ -250,6 +255,10 @@
                                 <div>
                                     <span>Total: </span>
                                     <field name="total"/>
+                                </div>
+                                <div>
+                                    <span>Total final: </span>
+                                    <field name="total_final"/>
                                 </div>
                             </div>
 

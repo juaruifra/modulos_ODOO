@@ -67,6 +67,32 @@ class PeluqueriaCita(models.Model):
         store=True
     )
 
+    # Tipo de descuento manual que se aplicará a la cita.
+    # - porcentaje: aplica un % sobre el total
+    # - importe: resta una cantidad fija
+    descuento_tipo = fields.Selection(
+        [
+            ('porcentaje', 'Porcentaje (%)'),
+            ('importe', 'Importe Fijo'),
+        ],
+        string='Tipo de Descuento',
+        default='porcentaje'
+    )
+
+    # Valor del descuento introducido por recepción.
+    # El significado depende del tipo elegido arriba.
+    descuento_valor = fields.Float(
+        string='Valor Descuento',
+        default=0.0
+    )
+
+    # Total final tras aplicar el descuento manual.
+    total_final = fields.Float(
+        string='Total Final',
+        compute='_compute_total_final',
+        store=True
+    )
+
     # Notas internas de la cita.
     # Sirve para guardar observaciones rápidas: alergias, preferencias,
     # comentarios del cliente, etc.
@@ -117,6 +143,37 @@ class PeluqueriaCita(models.Model):
     def _compute_total(self):
         for cita in self:
             cita.total = sum(cita.linea_servicio_ids.mapped('subtotal'))
+
+    # Calcula el total final aplicando el descuento manual.
+    @api.depends('total', 'descuento_tipo', 'descuento_valor')
+    def _compute_total_final(self):
+        for cita in self:
+            descuento_aplicado = 0.0
+
+            # Descuento por porcentaje (ejemplo: 10 => 10%)
+            if cita.descuento_tipo == 'porcentaje':
+                descuento_aplicado = cita.total * (cita.descuento_valor / 100.0)
+
+            # Descuento por importe fijo (ejemplo: 5 => -5 unidades de moneda)
+            if cita.descuento_tipo == 'importe':
+                descuento_aplicado = cita.descuento_valor
+
+            # Nunca permitimos que el total final quede en negativo.
+            cita.total_final = max(cita.total - descuento_aplicado, 0.0)
+
+    # Validación del descuento manual para evitar valores incoherentes.
+    @api.constrains('descuento_tipo', 'descuento_valor')
+    def _check_descuento_valido(self):
+        for cita in self:
+            if cita.descuento_valor < 0:
+                raise ValidationError(
+                    'El valor del descuento no puede ser negativo.'
+                )
+
+            if cita.descuento_tipo == 'porcentaje' and cita.descuento_valor > 100:
+                raise ValidationError(
+                    'El descuento por porcentaje no puede ser mayor que 100%.'
+                )
 
     # Regla de negocio: una cita debe tener al menos un servicio.
     # Incluimos cliente_id en el decorator para que esta validación también
