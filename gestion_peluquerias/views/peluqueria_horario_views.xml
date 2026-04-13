@@ -16,11 +16,88 @@
         </field>
     </record>
 
+    <!-- Vista kanban del horario comercial -->
+    <record id="view_peluqueria_horario_kanban" model="ir.ui.view">
+        <field name="name">peluqueria.horario.kanban</field>
+        <field name="model">peluqueria.horario</field>
+        <field name="arch" type="xml">
+            <!-- Agrupamos por día para ver de un vistazo la semana completa -->
+            <kanban default_group_by="dia_semana">
+                <field name="dia_semana"/>
+                <field name="turno"/>
+                <field name="hora_apertura"/>
+                <field name="hora_cierre"/>
+                <field name="cerrado"/>
+
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click oe_kanban_card"
+                             t-att-style="record.cerrado.raw_value ? 'opacity:0.65;background:#f8f9fa;border-left:4px solid #dc3545;' : 'border-left:4px solid #198754;'">
+
+                            <!-- Título principal de la tarjeta -->
+                            <div class="oe_kanban_details">
+                                <strong>
+                                    <field name="dia_semana"/> - <field name="turno"/>
+                                </strong>
+                            </div>
+
+                            <!-- Horas de apertura y cierre -->
+                            <div class="oe_kanban_details">
+                                <div>
+                                    <span>Apertura: </span>
+                                    <field name="hora_apertura" widget="float_time"/>
+                                </div>
+                                <div>
+                                    <span>Cierre: </span>
+                                    <field name="hora_cierre" widget="float_time"/>
+                                </div>
+                            </div>
+
+                            <!-- Estado visible de forma muy clara -->
+                            <div class="oe_kanban_details">
+                                <span t-if="record.cerrado.raw_value" class="badge text-bg-danger">Cerrado</span>
+                                <span t-if="!record.cerrado.raw_value" class="badge text-bg-success">Abierto</span>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Vista formulario del horario comercial -->
+    <record id="view_peluqueria_horario_form" model="ir.ui.view">
+        <field name="name">peluqueria.horario.form</field>
+        <field name="model">peluqueria.horario</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <!-- Día de la semana -->
+                        <field name="dia_semana"/>
+
+                        <!-- Turno del día: mañana o tarde -->
+                        <field name="turno"/>
+
+                        <!-- Hora de apertura -->
+                        <field name="hora_apertura" widget="float_time"/>
+
+                        <!-- Hora de cierre -->
+                        <field name="hora_cierre" widget="float_time"/>
+
+                        <!-- Si está cerrado, la franja no se tendrá en cuenta -->
+                        <field name="cerrado"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
     <!-- Acción -->
     <record id="action_peluqueria_horario" model="ir.actions.act_window">
         <field name="name">Horario Comercial</field>
         <field name="res_model">peluqueria.horario</field>
-        <field name="view_mode">list</field>
+        <field name="view_mode">kanban,list,form</field>
     </record>
 
 </odoo>
