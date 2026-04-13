@@ -60,6 +60,13 @@ class PeluqueriaCita(models.Model):
         store=True
     )
 
+    # Notas internas de la cita.
+    # Sirve para guardar observaciones rápidas: alergias, preferencias,
+    # comentarios del cliente, etc.
+    notas = fields.Text(
+        string='Notas de la Cita'
+    )
+
     # Estado de la cita
     state = fields.Selection(
         [

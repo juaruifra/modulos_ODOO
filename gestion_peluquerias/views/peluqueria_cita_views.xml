@@ -135,6 +135,15 @@
                         <field name="total" readonly="1"/>
                     </group>
 
+                    <!--
+                        Notas de la cita
+                        Aquí la recepcionista puede anotar información útil
+                        para el estilista (preferencias, observaciones, etc.)
+                    -->
+                    <group>
+                        <field name="notas" readonly="state != 'borrador'" placeholder="Ejemplo: clienta alérgica a amoniaco, prefiere secado natural..."/>
+                    </group>
+
                 </sheet>
             </form>
         </field>
@@ -186,6 +195,7 @@
                 <field name="fecha_fin"/>
                 <field name="state"/>
                 <field name="total"/>
+                <field name="notas"/>
 
                 <templates>
                     <t t-name="kanban-box">
@@ -233,6 +243,14 @@
                                 <div>
                                     <span>Total: </span>
                                     <field name="total"/>
+                                </div>
+                            </div>
+
+                            <!-- Notas visibles de un vistazo en el tablero -->
+                            <div class="oe_kanban_details">
+                                <div>
+                                    <span>Notas: </span>
+                                    <field name="notas"/>
                                 </div>
                             </div>
 
