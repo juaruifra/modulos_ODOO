@@ -25,6 +25,13 @@ class PeluqueriaCita(models.Model):
         required=True
     )
 
+    # Este campo trae automáticamente si el cliente es VIP desde su ficha.
+    # Es de solo lectura porque el valor se calcula en res.partner.
+    cliente_vip = fields.Boolean(
+        related='cliente_id.is_vip',
+        string='Cliente VIP'
+    )
+
     # Estilista que realizará la cita
     estilista_id = fields.Many2one(
         'peluqueria.estilista',
@@ -110,6 +117,17 @@ class PeluqueriaCita(models.Model):
     def _compute_total(self):
         for cita in self:
             cita.total = sum(cita.linea_servicio_ids.mapped('subtotal'))
+
+    # Regla de negocio: una cita debe tener al menos un servicio.
+    # Incluimos cliente_id en el decorator para que esta validación también
+    # se ejecute al crear la cita (cliente_id siempre viene en el alta).
+    @api.constrains('cliente_id', 'linea_servicio_ids')
+    def _check_cita_con_servicios(self):
+        for cita in self:
+            if not cita.linea_servicio_ids:
+                raise ValidationError(
+                    'La cita debe tener al menos una línea de servicio.'
+                )
 
     # Regla: no se puede guardar una cita si se solapa con otra del mismo estilista
     # Importante: ignoramos las citas canceladas para que no bloqueen la agenda

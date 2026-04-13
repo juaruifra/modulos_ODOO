@@ -109,6 +109,8 @@
                     <!-- Datos principales de la cita -->
                     <group>
                         <field name="cliente_id" readonly="state != 'borrador'"/>
+                        <field name="cliente_vip" invisible="1"/>
+                        <span class="o_form_label text-warning" invisible="not cliente_vip">VIP</span>
                         <field name="estilista_id"
                         domain="[('activo', '=', True)]" readonly="state != 'borrador'"/>
                         <field name="fecha_inicio" readonly="state != 'borrador'"/>
@@ -169,6 +171,7 @@
 
                 <!-- Información adicional visible al pasar el ratón -->
                 <field name="cliente_id"/>
+                <field name="cliente_vip"/>
                 <field name="estilista_id"/>
                 <field name="state"/>
 
@@ -196,6 +199,7 @@
                 <field name="state"/>
                 <field name="total"/>
                 <field name="notas"/>
+                <field name="cliente_vip"/>
 
                 <templates>
                     <t t-name="kanban-box">
@@ -215,6 +219,9 @@
                                 <div>
                                     <span>Cliente: </span>
                                     <field name="cliente_id"/>
+                                </div>
+                                <div>
+                                    <span class="text-warning" invisible="not cliente_vip">VIP</span>
                                 </div>
                                 <div>
                                     <span>Estilista: </span>
