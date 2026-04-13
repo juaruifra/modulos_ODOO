@@ -216,7 +216,7 @@ class PeluqueriaCita(models.Model):
             ])
 
             if not horarios:
-                raise ValidationError('La peluquería está cerrada ese día.')
+                raise ValidationError('El horario seleccionado no es válido. La peluqueria está cerrada en ese momento.')
 
             # Convertir hora de la cita a float
             hora_inicio = fecha_inicio_local.hour + fecha_inicio_local.minute / 60
