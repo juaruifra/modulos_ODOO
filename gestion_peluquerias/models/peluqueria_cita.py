@@ -29,7 +29,8 @@ class PeluqueriaCita(models.Model):
     # Es de solo lectura porque el valor se calcula en res.partner.
     cliente_vip = fields.Boolean(
         related='cliente_id.is_vip',
-        string='Cliente VIP'
+        string='Cliente VIP',
+        readonly=True
     )
 
     # Estilista que realizará la cita
@@ -118,7 +119,7 @@ class PeluqueriaCita(models.Model):
         # Si la cita todavía no tiene código, se lo asignamos
         if vals.get('name', 'Nueva') == 'Nueva':
             vals['name'] = self.env['ir.sequence'].next_by_code(
-                'peluqueria.cita'
+                'peluqueria.cita' # El código de la secuencia que definimos en data/peluqueria_sequence.xml
             ) or 'Nueva'
 
         # Llamamos al create original de Odoo
@@ -154,7 +155,7 @@ class PeluqueriaCita(models.Model):
             if cita.descuento_tipo == 'porcentaje':
                 descuento_aplicado = cita.total * (cita.descuento_valor / 100.0)
 
-            # Descuento por importe fijo (ejemplo: 5 => -5 unidades de moneda)
+            # Descuento por importe fijo (ejemplo: 5 => -5 euros)
             if cita.descuento_tipo == 'importe':
                 descuento_aplicado = cita.descuento_valor
 
@@ -187,7 +188,7 @@ class PeluqueriaCita(models.Model):
                 )
 
     # Regla: no se puede guardar una cita si se solapa con otra del mismo estilista
-    # Importante: ignoramos las citas canceladas para que no bloqueen la agenda
+    # Importante: ignoramos las citas canceladas
     @api.constrains('fecha_inicio', 'fecha_fin', 'estilista_id', 'state')
     def _check_solapamiento_citas(self):
         for cita in self:
@@ -197,10 +198,10 @@ class PeluqueriaCita(models.Model):
 
             # Buscamos citas del mismo estilista que se crucen en el tiempo
             citas_solapadas = self.search([
-                ('id', '!=', cita.id),
+                ('id', '!=', cita.id), # Ignoramos la propia cita que se está guardando
                 ('estilista_id', '=', cita.estilista_id.id),
                 ('state', '!=', 'cancelada'),
-                ('fecha_inicio', '<', cita.fecha_fin),
+                #('state', '!=', 'borrador'), # Opcional: si no se quiere que las citas en borrador bloqueen otras
                 ('fecha_fin', '>', cita.fecha_inicio),
             ])
 
@@ -268,16 +269,19 @@ class PeluqueriaCita(models.Model):
     # Validación para asegurar que la cita se asigna dentro del horario comercial      
     @api.constrains('fecha_inicio', 'linea_servicio_ids')
     def _check_horario_comercial(self):
-        
+        # Esta validación salta al guardar la cita si cambian la fecha
+        # o las líneas de servicio.
         for cita in self:
             if not cita.fecha_inicio:
                 continue
 
             # Calcular fecha_fin manualmente (no usar el campo computado)
+            # Así evitamos usar un valor antiguo si todavía no se ha recalculado.
             total_horas = sum(cita.linea_servicio_ids.mapped('duracion'))
             fecha_fin_calculada = cita.fecha_inicio + timedelta(hours=total_horas)
 
             # Obtener zona horaria del usuario
+            # Odoo guarda fechas en UTC; convertimos para comparar en hora local real.
             tz = pytz.timezone(self.env.user.tz or 'UTC')
             
             # Localizar a UTC primero
@@ -289,9 +293,11 @@ class PeluqueriaCita(models.Model):
             fecha_fin_local = fecha_fin_utc.astimezone(tz)
 
             # Obtener el día de la semana
+            # weekday(): lunes=0 ... domingo=6
             dia_semana = str(fecha_inicio_local.weekday())
 
             # Buscar TODOS los horarios de ese día
+            # Puede haber más de una franja (ejemplo: mañana y tarde).
             horarios = self.env['peluqueria.horario'].search([
                 ('dia_semana', '=', dia_semana),
                 ('cerrado', '=', False)
@@ -301,10 +307,12 @@ class PeluqueriaCita(models.Model):
                 raise ValidationError('El horario seleccionado no es válido. La peluqueria está cerrada en ese momento.')
 
             # Convertir hora de la cita a float
+            # Ejemplo: 10:30 -> 10.5
             hora_inicio = fecha_inicio_local.hour + fecha_inicio_local.minute / 60
             hora_fin = fecha_fin_local.hour + fecha_fin_local.minute / 60
 
             # Comprobar si encaja en ALGUNA franja
+            # Con que encaje en una franja válida, la cita se acepta.
             cita_valida = False
             for horario in horarios:
                 if hora_inicio >= horario.hora_apertura and hora_fin <= horario.hora_cierre:

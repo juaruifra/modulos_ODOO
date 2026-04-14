@@ -22,6 +22,7 @@ class PeluqueriaCitaLinea(models.Model):
 
     # Duración del servicio para esta cita
     # La copiamos desde el servicio para que quede guardada aunque el servicio cambie en el futuro
+    # Se puede editar si se quiere (por ejemplo, si se tarda más de lo previsto)
     duracion = fields.Float(string='Duración (horas)')
 
     # Precio del servicio en esta cita
