@@ -3,19 +3,25 @@
 
     <!-- Hereda la vista de formulario de res.partner para añadir distintivo VIP -->
     <record id="view_res_partner_form_vip" model="ir.ui.view">
+        <!-- Nombre técnico de esta vista heredada -->
         <field name="name">res.partner.form.vip</field>
+        <!-- Modelo sobre el que se aplica la personalización -->
         <field name="model">res.partner</field>
+        <!-- Vista original de contactos que vamos a ampliar -->
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
             <!-- Añade la etiqueta VIP junto al nombre del cliente -->
             <xpath expr="//field[@name='name']" position="after">
+                <!-- Campo técnico oculto; se usa para controlar visibilidad -->
                 <field name="is_vip" invisible="1"/>
+                <!-- Badge visual: solo aparece cuando el cliente es VIP -->
                 <span class="badge text-bg-primary ms-2" invisible="not is_vip">
                     ⭐ VIP
                 </span>
             </xpath>
             <!-- Muestra el número de citas realizadas: Dentro del grupo de ventas -->
             <xpath expr="//group[@name='sale']" position="inside">
+                <!-- Campo calculado con el total de citas realizadas -->
                 <field name="citas_realizadas"/>
             </xpath>
         </field>
