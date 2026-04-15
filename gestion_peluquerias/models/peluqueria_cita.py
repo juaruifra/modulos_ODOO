@@ -61,7 +61,7 @@ class PeluqueriaCita(models.Model):
         string='Servicios'
     )
 
-    # Total a pagar por la cita (suma de subtotales de las líneas)
+    # Total parcial a pagar por la cita (suma de subtotales de las líneas). Sin aplicar descuentos manuales.
     total = fields.Float(
         string='Total',
         compute='_compute_total',
@@ -176,8 +176,8 @@ class PeluqueriaCita(models.Model):
                     'El descuento por porcentaje no puede ser mayor que 100%.'
                 )
 
-    # Regla de negocio: una cita debe tener al menos un servicio.
-    # Incluimos cliente_id en el decorator para que esta validación también
+    # Regla: una cita debe tener al menos un servicio.
+    # Incluimos cliente_id en el decorador para que esta validación también
     # se ejecute al crear la cita (cliente_id siempre viene en el alta).
     @api.constrains('cliente_id', 'linea_servicio_ids')
     def _check_cita_con_servicios(self):
