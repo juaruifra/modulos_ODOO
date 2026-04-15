@@ -173,7 +173,7 @@
                 <!-- Título que aparece dentro del bloque -->
                 <field name="name"/>
 
-                <!-- Información adicional visible al pasar el ratón -->
+                <!-- Información ADICIONAL visible al pasar el ratón -->
                 <field name="cliente_id"/>
                 <field name="cliente_vip"/>
                 <field name="estilista_id"/>
